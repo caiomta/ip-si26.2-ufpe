@@ -1,5 +1,5 @@
 def main():
-    REGIONS = tatar, asphodel, elysium, temple_of_styx
+    REGIONS = tartarus, asphodel, elysium, temple_of_styx
     total_blessings = 0
     obtained_individual_blessings = []
 
@@ -17,7 +17,7 @@ def main():
     print_end(survived, i)
 
 
-def tatar(obtained_individual_blessings, total_blessings):
+def tartarus(obtained_individual_blessings, total_blessings):
     prisioners = input().split(", ")
     bubble_sort(prisioners)
     print(f"Zagreu: Aqui está sua papelada: {', '.join(prisioners)}\n")
