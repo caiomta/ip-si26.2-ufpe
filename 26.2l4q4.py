@@ -99,9 +99,7 @@ def filter_hand_and_count_errors(hand):
                 marked_indexes.append(2 * i + j)
 
     errors = len(marked_indexes)
-    filtered_hand = [
-        hand_copy[i] for i in range(1, len(hand_copy)) if i not in marked_indexes
-    ]
+    filtered_hand = [hand_copy[i] for i in range(1, len(hand_copy)) if i not in marked_indexes]
     return filtered_hand, errors
 
 

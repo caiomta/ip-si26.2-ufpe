@@ -21,9 +21,7 @@ def main():
         while hp and not venceu:
             passos = movimentar(posicao, comandos[i], passos)
             sala = masmorra[posicao[1]][posicao[0]]
-            hp, venceu = aplicar_efeito_sala(
-                sala, personagem, hp, hp_maximo, tentativas, passos
-            )
+            hp, venceu = aplicar_efeito_sala(sala, personagem, hp, hp_maximo, tentativas, passos)
             i += 1
 
 
@@ -91,7 +89,8 @@ def transpor_masmorra(masmorra):
 
 def exibir_inicio():
     print(
-        "A jornada pela Pedra Mágica tem início! O destino do reino está selado, e esta guerra finalmente encontrará o seu fim.\n"
+        "A jornada pela Pedra Mágica tem início! O destino do reino está selado, e esta guerra "
+        "finalmente encontrará o seu fim.\n"
     )
 
 
@@ -105,7 +104,8 @@ def exibir_morte(tentativas):
 def exibir_vitoria(hp, passos):
     print("A profecia se cumpriu e a paz reina mais uma vez!")
     print(
-        f"Cruzando as profundezas da masmorra em {passos} passos de pura bravura, o(a) nosso(a) herói(na) ergue-se triunfante com {hp} HP."
+        f"Cruzando as profundezas da masmorra em {passos} passos de pura bravura, o(a) nosso(a) "
+        f"herói(na) ergue-se triunfante com {hp} HP."
     )
 
 

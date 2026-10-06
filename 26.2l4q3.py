@@ -153,8 +153,14 @@ def battle_trader(player_coefficient, cards):
 def print_phase(phase):
     PHASE_MESSAGES = (
         "Leshy - O sol banha os abetos sonolentos, você adentrou o... matagal.",
-        "Leshy - O ar úmido é tomado pelo cheiro fétido de mofo e morte, você caminha cautelosamente até entrar na... charneca.",
-        "Leshy - O alívio do ar fresco logo dá lugar a um arrepio álgido. Você escala até a... linha de neve.",
+        (
+            "Leshy - O ar úmido é tomado pelo cheiro fétido de mofo e morte, você caminha "
+            "cautelosamente até entrar na... charneca."
+        ),
+        (
+            "Leshy - O alívio do ar fresco logo dá lugar a um arrepio álgido. Você escala até a... "
+            "linha de neve."
+        ),
     )
     print(PHASE_MESSAGES[phase])
 

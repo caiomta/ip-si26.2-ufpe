@@ -88,9 +88,7 @@ def conjurar_feitico(
     elif not feitico_anterior:
         print("Hécate: Foi para isto que treinamos todas essas noites, Melinoë.")
     else:
-        print(
-            "Hécate: Disciplina, Melinoë. Uma bruxa vence antes mesmo de deixar a Encruzilhada."
-        )
+        print("Hécate: Disciplina, Melinoë. Uma bruxa vence antes mesmo de deixar a Encruzilhada.")
 
     print("Que assim seja!")
 
@@ -99,9 +97,7 @@ def conjurar_feitico(
 
 def exibir_ingredientes_insuficientes(nome):
     print(f"Ingredientes insuficientes para conjurar {nome}.")
-    print(
-        "Hécate: Intenção sem preparo não basta. Reúna os ingredientes e tente outra vez."
-    )
+    print("Hécate: Intenção sem preparo não basta. Reúna os ingredientes e tente outra vez.")
 
 
 def exibir_relatorio(poder, moli, lotus, cinzas):
@@ -114,13 +110,12 @@ def checar_poder(meta, poder):
     if meta <= poder:
         print("Melinoë está pronta para enfrentar Cronos.")
         print(
-            "Hécate: Você está pronta para partir. Lembre-se do que aprendeu na Encruzilhada — e retorne para nós."
+            "Hécate: Você está pronta para partir. Lembre-se do que aprendeu na Encruzilhada — e "
+            "retorne para nós."
         )
     else:
         print("Melinoë precisa se preparar melhor antes de enfrentar Cronos.")
-        print(
-            "Hécate: Cronos não terá piedade de você. Eu tampouco terei durante seu treinamento."
-        )
+        print("Hécate: Cronos não terá piedade de você. Eu tampouco terei durante seu treinamento.")
 
 
 main()
