@@ -77,7 +77,9 @@ def receber_time():
         if nome == "FIM":
             return time
 
-        vida, agilidade, arma = [info.split(maxsplit=1)[1] for info in input().split(" - ")]
+        vida, agilidade, arma = [
+            info.split(maxsplit=1)[1] for info in input().split(" - ")
+        ]
         dano = RELIQUIAS_LENDARIAS.get(arma, 0)
         time[nome] = {
             "Vida": int(vida),

@@ -17,7 +17,8 @@ def main():
 
 
 def get_disguise_book(phrase):
-    # c.isupper() or c.islower() só é válido caso o caractere seja alfabético
+    # c.isupper() or c.islower() só é válido caso o caractere seja
+    # alfabético
     phrase = "".join([c for c in phrase if c.isupper() or c.islower()])
     disguise_book = {}
     for c in phrase:
@@ -42,17 +43,20 @@ def get_census_from_disguise_book(disguise_book):
     return dict(census)
 
 
-# o bottom-up merge sort é basicamente o merge sort que evita recursão; para isso, ele trata
-# a lista em blocos (inicialmente de 1 item), ao invés de utilizar recursão para "quebrar" a lista,
-# e intercala esses blocos em pares para gerar blocos ordenados até 2x maiores, e repete esse
-# processo até o bloco ser maior ou do mesmo tamanho da lista.
+# o bottom-up merge sort é basicamente o merge sort que evita recursão;
+# para isso, ele trata a lista em blocos (inicialmente de 1 item), ao
+# invés de utilizar recursão para "quebrar" a lista, e intercala esses
+# blocos em pares para gerar blocos ordenados até 2x maiores, e repete
+# esse processo até o bloco ser maior ou do mesmo tamanho da lista.
 def bottom_up_duples_merge_sort(duples):
     n = len(duples)
     block_len = 1
 
     while block_len < n:
         for i in range(0, n, 2 * block_len):
-            middle = min(i + block_len, n)  # meio = fim do primeiro bloco, início do segundo
+            middle = min(
+                i + block_len, n
+            )  # meio = fim do primeiro bloco, início do segundo
             end = min(i + 2 * block_len, n)
             interleave_halves(duples, i, middle, end)
         block_len *= 2
@@ -74,15 +78,17 @@ def interleave_halves(duples, start, middle, end):
             j += 1
         k += 1
 
-    # após esgotar um bloco, preenche o resto do espaço com o resto do outro
-    # (a operação or vai retornar apenas o lado não esgotado)
+    # após esgotar um bloco, preenche o resto do espaço com o resto do
+    # outro (a operação or vai retornar apenas o lado não esgotado)
     for d in left_side[i:] or right_side[j:]:
         duples[k] = d
         k += 1
 
 
 def census_to_str(census):
-    census = [f"{appearances}{animago}" for animago, appearances in census.items()]
+    census = [
+        f"{appearances}{animago}" for animago, appearances in census.items()
+    ]
     return " ".join(census)
 
 
@@ -91,7 +97,9 @@ def investigate_animago(animago, census, disguise_book):
     disguise_amount = len(disguise_book[animago])
     favourite_disguise = max(
         disguise_book[animago],
-        key=disguise_book[animago].get,  # get funciona como lambda d: disguise_book[animago][d]
+        key=disguise_book[
+            animago
+        ].get,  # get funciona como lambda d: disguise_book[animago][d]
     )
 
     print(f"Total de ocorrências: {appearances}")

@@ -11,11 +11,24 @@ ITENS = {
     "F": {
         "secao": "magias",
         "nome": "Varinha de Chamas",
-        "mensagem": "O que é isso? Sinto um fogo emanando do fundo da minha alma…",
+        "mensagem": "O que é isso? Sinto um fogo emanando do fundo da minha "
+        "alma…",
     },
-    "V": {"secao": "magias", "nome": "Varinha de Gelo", "mensagem": "Uma magia nova é sempre bom!"},
-    "P": {"secao": "pás", "nome": "Pá Espectral", "mensagem": "Uma pá transparente, que loucura!"},
-    "p": {"secao": "pás", "nome": "Pá comum", "mensagem": "Mais uma para minha coleção."},
+    "V": {
+        "secao": "magias",
+        "nome": "Varinha de Gelo",
+        "mensagem": "Uma magia nova é sempre bom!",
+    },
+    "P": {
+        "secao": "pás",
+        "nome": "Pá Espectral",
+        "mensagem": "Uma pá transparente, que loucura!",
+    },
+    "p": {
+        "secao": "pás",
+        "nome": "Pá comum",
+        "mensagem": "Mais uma para minha coleção.",
+    },
 }
 
 CHEFES = {
@@ -25,7 +38,11 @@ CHEFES = {
 
 DIRECOES = {"^": (-1, 0), "v": (1, 0), ">": (0, 1), "<": (0, -1)}
 
-MAGIAS_CATALOGO = ["Pergaminho dos Elementos", "Varinha da Água", "Grimório de 4 folhas"]
+MAGIAS_CATALOGO = [
+    "Pergaminho dos Elementos",
+    "Varinha da Água",
+    "Grimório de 4 folhas",
+]
 
 
 def main():
@@ -44,8 +61,8 @@ def main():
             },
             "mensagem_inicial": (
                 "======== CEMITÉRIO DOS LICHS ========\n"
-                "Um antigo vilarejo tomado pelos mortos. Me pergunto se aquele cavaleiro fantasma "
-                "se esconde por aqui…"
+                "Um antigo vilarejo tomado pelos mortos. Me pergunto se "
+                "aquele cavaleiro fantasma se esconde por aqui…"
             ),
             "desafio": desafio_cemiterio,
             "requisito": requisito_cemiterio,
@@ -63,19 +80,23 @@ def main():
             },
             "mensagem_inicial": (
                 "======== NAVIO ENCALHADO ========\n"
-                "Uma embarcação antiga do Rei liderada pelo meu antigo mentor, o que será que "
-                "encontrarei?"
+                "Uma embarcação antiga do Rei liderada pelo meu antigo "
+                "mentor, o que será que encontrarei?"
             ),
             "desafio": desafio_navio,
             "requisito": requisito_navio,
             "chefe": "Polar Knight",
             "mensagem_chefe": (
-                "Polar Knight! O que você está fazendo aqui?\nComo pode trair nosso juramento?"
+                "Polar Knight! O que você está fazendo aqui?\nComo pode trair "
+                "nosso juramento?"
             ),
         },
     )
 
-    print("Shovel Knight, o lendário guerreiro, está de volta! Salvai-nos, ó herói da pá!\n")
+    print(
+        "Shovel Knight, o lendário guerreiro, está de volta! Salvai-nos, ó "
+        "herói da pá!\n"
+    )
 
     inventario = INVENTARIO.copy()
     visitar_mercador(inventario)
@@ -122,7 +143,10 @@ def requisito_cemiterio(inventario):
 def desafio_navio(inventario):
     print("Você de novo? E que neve toda é essa?")
     if len(inventario["itens"]["pás"]) >= 3:
-        print("Engraçado tentar parar um mestre das pás com neve, você se superou dessa vez!\n")
+        print(
+            "Engraçado tentar parar um mestre das pás com neve, você se "
+            "superou dessa vez!\n"
+        )
         return True
     inventario["nível"] -= 3
     if inventario["nível"] > 0:
@@ -132,7 +156,10 @@ def desafio_navio(inventario):
 
 
 def requisito_navio(inventario):
-    return len(inventario["magias"]) >= 2 or "Varinha de Gelo" in inventario["magias"]
+    return (
+        len(inventario["magias"]) >= 2
+        or "Varinha de Gelo" in inventario["magias"]
+    )
 
 
 def processar_fase(fase, inventario):
@@ -147,10 +174,17 @@ def processar_fase(fase, inventario):
     while True:
         direcao = input()
         posicao = movimentar(posicao, direcao)
-        e_chefe = coletar_e_checar_chefe(inventario, fase["mapa"], posicao, fase["mensagem_chefe"])
+        e_chefe = coletar_e_checar_chefe(
+            inventario, fase["mapa"], posicao, fase["mensagem_chefe"]
+        )
         if e_chefe:
             cumpre_requisito = fase["requisito"](inventario)
-            return enfrentar(fase["chefe"], inventario, inventario["nível"], cumpre_requisito)
+            return enfrentar(
+                fase["chefe"],
+                inventario,
+                inventario["nível"],
+                cumpre_requisito,
+            )
 
 
 # atualiza a posição no grid 5x5 com base na direção
@@ -223,10 +257,16 @@ def torre(inventario):
                 perdeu_nivel = True
 
             if perdeu_nivel:
-                print("Não posso recuar de jeito nenhum! Irei superar meus limites aqui e agora!")
+                print(
+                    "Não posso recuar de jeito nenhum! Irei superar meus "
+                    "limites aqui e agora!"
+                )
 
     if inventario["nível"] > 0:
-        print("Minha amada! Finalmente pude revê-la e livrá-la desta terrível maldição!")
+        print(
+            "Minha amada! Finalmente pude revê-la e livrá-la desta terrível "
+            "maldição!"
+        )
         print("Vamos embora deste lugar amaldiçoado!\n")
         return True
     return False
@@ -234,15 +274,25 @@ def torre(inventario):
 
 def exibir_derrota():
     print("A jornada do herói chega a um triste fim…")
-    print("Sua pá não foi capaz de cavar uma saída desse buraco de trevas em que estamos.")
+    print(
+        "Sua pá não foi capaz de cavar uma saída desse buraco de trevas em "
+        "que estamos."
+    )
     print("O que restou? Nada… brutal.\n")
 
 
 def exibir_relatorio_final(inventario):
-    capacetes = [capacete for capacete, valor in inventario["troféus"].items() if valor == 1]
+    capacetes = [
+        capacete
+        for capacete, valor in inventario["troféus"].items()
+        if valor == 1
+    ]
     print("======== RELATÓRIO FINAL ========")
     print(f"CAPACETES: {', '.join(capacetes) if capacetes else 'NENHUM'}")
-    print(f"MAGIAS: {', '.join(inventario['magias']) if inventario['magias'] else 'NENHUM'}")
+    print(
+        "MAGIAS:",
+        ", ".join(inventario["magias"]) if inventario["magias"] else "NENHUM",
+    )
     print(f"PÁS: {', '.join(inventario['itens']['pás'])}")
 
 

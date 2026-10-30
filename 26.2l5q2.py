@@ -62,7 +62,9 @@ def print_best_weapons(team_weapons):
                 key=weapons.get,  # `weapons.get` funciona como `lambda w: weapons[w]` na prática
             )
             power = weapons[best_weapon]
-            print(f"A arma mais forte de {hero} é a {best_weapon} com {power} Pontos de Poder.")
+            print(
+                f"A arma mais forte de {hero} é a {best_weapon} com {power} Pontos de Poder."
+            )
         else:
             print(f"{hero} não possui nenhuma arma.")
 
