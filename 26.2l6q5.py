@@ -1,4 +1,21 @@
-# TODO: implementar checagem de abertura clássica
+PLAYER_ORDER = ("N", "C")
+
+
+FAMOUS_OPENINGS = {
+    (
+        ((6, 4), (4, 4)),
+        ((1, 2), (3, 2)),
+    ): "a Defesa Siciliana",
+    (
+        ((6, 4), (4, 4)),
+        ((1, 3), (3, 3)),
+    ): "a Defesa Escandinava",
+    (
+        ((6, 3), (4, 3)),
+        ((1, 3), (3, 3)),
+        ((6, 2), (4, 2)),
+    ): "o Gambito da Rainha",
+}
 
 
 def main():
@@ -18,7 +35,19 @@ def main():
 
     board = generate_board()
     hist = []
-    play(board, hist, child_name)
+    winner = play(board, hist, child_name)
+    print_history(hist)
+
+    if winner == child_name:
+        print(
+            f"Parabéns, {child_name}! Você venceu o Papai Noel e ganhou um "
+            "presente!"
+        )
+    else:
+        print(
+            f"Ho ho ho! Você não foi uma criança boa durante o ano, "
+            f"{child_name}, e por isso perdeu. Sem presente!"
+        )
 
 
 def generate_board():
@@ -31,42 +60,56 @@ def generate_board():
 
 
 def play(board, hist, child_name, turn=0):
-    info = input()
-    player, origin, dest = info.split()
-    player_name = "Papai Noel" if player == "N" else child_name
+    move_info = input()
+    player, origin, dest = extract_move_info(move_info)
 
-    if is_wrong_player(turn, player):
-        register_move(hist, player_name, origin, "FORA DA VEZ")
-
+    if not is_right_player(turn, player):
+        register_wrong_turn_move(hist, player, child_name, origin, dest)
         print(
-            f"{player_name} insistiu em jogar fora da vez! A partida foi "
-            "encerrada."
+            f"{get_player_name(player, child_name)} insistiu em jogar fora da "
+            "vez! A partida foi encerrada."
         )
-        return
-
-    origin, dest = (
-        tuple(int(i) for i in origin.strip("()").split(", ")),
-        tuple(int(i) for i in dest.strip("()").split(", ")),
-    )
+        return get_opposite_player_name(player, child_name)
 
     if is_move_valid(board, player, origin, dest):
-        if is_king_in_dest(board, dest):
-            winner = child_name if turn % 1 else "Papai Noel"
-            print(f"O rei foi capturado! {child_name} venceu a partida!")
-            return
+        register_valid_move(hist, player, child_name, origin, dest)
+        check_famous_opening(hist, player, child_name)
+
+        if check_mate(board, dest):
+            player_name = get_player_name(player, child_name)
+            print(f"O rei foi capturado! {player_name} venceu a partida!")
+            return player_name
+
         move(board, origin, dest)
     else:
+        register_wrong_move(hist, player, child_name, origin, dest)
         print("Jogada errada, perdeu a vez!")
 
-    return play(board, turn + 1)
+    return play(board, hist, child_name, turn + 1)
 
 
-def is_wrong_player(r, player):
-    return (r == 0 and player != "N") or player == "N"
-
-
-def is_king_in_dest(board, dest):
+def check_mate(board, dest):
     return board.get(dest, "").lower() == "r"
+
+
+def extract_move_info(move_str):
+    player, coords_str = move_str.split(maxsplit=1)
+    origin_y, origin_x, dest_y, dest_x = [
+        int(c.strip("(),")) for c in coords_str.split()
+    ]
+    return player, (origin_y, origin_x), (dest_y, dest_x)
+
+
+def get_player_name(player, child_name):
+    return "Papai Noel" if player == "N" else child_name
+
+
+def get_opposite_player_name(player, child_name):
+    return child_name if player == "N" else "Papai Noel"
+
+
+def is_right_player(turn, player):
+    return PLAYER_ORDER[turn % 2] == player
 
 
 def move(board, origin, dest):
@@ -84,7 +127,9 @@ def is_move_valid(board, player, origin, dest):
     ):
         return False
 
-    return IS_PIECE_MOVEMENT_VALID[origin_p.lower()](board, origin, dest)
+    return IS_PIECE_MOVEMENT_VALID[origin_p.lower()](
+        board, player, origin, dest
+    )
 
 
 def are_all_coordinates_in_board_range(origin, dest):
@@ -138,28 +183,31 @@ def is_king_movement_valid(_board, _player, origin, dest):
 
 def is_pawn_movement_valid(board, player, origin, dest):
     v_diff = dest[0] - origin[0]
+    positive_v_diff = v_diff > 0
 
     if (
         (not (0 < abs(v_diff) < 3))  # moved too much
-        or (player == "N" and v_diff > 0)
-        or (v_diff < 0)  # moved backwards
+        or (player == "N" and positive_v_diff)
+        or (player == "C" and not positive_v_diff)
     ):
         return False
 
-    dest_p = board.get(dest)
+    if origin[1] != dest[1]:
+        dest_p = board.get(dest)
+        h_diff = dest[1] - origin[1]
+        return (
+            abs(v_diff) == 1
+            and abs(h_diff) == 1
+            and dest_p
+            and not is_piece_from_player(dest_p, player)
+        )
 
-    if is_movement_diagonal(origin, dest) and (
-        abs(v_diff) != 1  # excessive diagonal movement
-        or not dest_p  # non-offensive diagonal
-        or is_piece_from_player(dest_p, player)  # friendly-fire diagonal
-    ):
-        return False
-
-    piece_in_front = (origin[0] - v_diff / abs(v_diff), origin[1]) in board
-    if dest in board or piece_in_front:  # piece at or in between destination
-        return False
-
-    return True
+    if abs(v_diff) == 1:
+        return dest not in board
+    return not (
+        dest in board
+        or (origin[0] + (1 if positive_v_diff else -1), origin[1]) in board
+    )
 
 
 IS_PIECE_MOVEMENT_VALID = {
@@ -214,24 +262,53 @@ def is_line_free(board, dir_i, origin, dest):
     return True
 
 
-def register_valid_move(hist, name, origin, dest):
-    register_move(hist, name, origin, dest, "VÁLIDA")
+def register_valid_move(hist, player, child_name, origin, dest):
+    register_move(hist, player, child_name, origin, dest, "VÁLIDA")
 
 
-def register_wrong_move(hist, name, origin, dest):
-    register_move(hist, name, origin, dest, "ERRADA")
+def register_wrong_move(hist, player, child_name, origin, dest):
+    register_move(hist, player, child_name, origin, dest, "ERRADA")
 
 
-def register_wrong_turn_move(hist, name, origin, dest):
-    register_move(hist, name, origin, dest, "FORA DA VEZ")
+def register_wrong_turn_move(hist, player, child_name, origin, dest):
+    register_move(hist, player, child_name, origin, dest, "FORA DA VEZ")
 
 
-def register_move(hist, name, origin, dest, status):
+def register_move(hist, player, child_name, origin, dest, status):
     hist.append(
         {
-            "name": name,
+            "player_name": get_player_name(player, child_name),
             "origin": origin,
             "dest": dest,
             "status": status,
         }
     )
+
+
+def print_history(hist):
+    print("Histórico da partida:")
+    for i, move in enumerate(hist):
+        print(
+            f"{i + 1}. {move['player_name']}: {move['origin'][0]} "
+            f"{move['origin'][1]} -> {move['dest'][0]} {move['dest'][1]} "
+            f"[{move['status']}]"
+        )
+
+
+def check_famous_opening(hist, player, child_name):
+    hist_tuple = tuple(
+        (i["origin"], i["dest"]) for i in hist if i["status"] == "VÁLIDA"
+    )
+
+    if len(hist_tuple) not in (2, 3):
+        return
+
+    for moves in FAMOUS_OPENINGS:
+        if moves == hist_tuple:
+            print(
+                f"Muito bem, {get_player_name(player, child_name)} utilizou "
+                f"{FAMOUS_OPENINGS[moves]}!"
+            )
+
+
+main()
